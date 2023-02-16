@@ -1,6 +1,6 @@
 // Jenkinsfile para comunicar jenkins con git
 pipeline {
-	enviroment {
+	environment {
 		dockerImageName = "fernandofar/curso:devops"
 		dockerImage1 = ""
 	}
