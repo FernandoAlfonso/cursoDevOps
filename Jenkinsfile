@@ -9,7 +9,7 @@ pipeline {
 		stages {
 			stage ('Revisar código') {
 				steps {
-					git credentialsId: 'poncho-cursos-devops',
+					git credentialsId: 'poncho-curso-devops',
 					url: 'https://github.com/FernandoAlfonso/cursoDevOps.git',
 					branch: 'main'
 				}
