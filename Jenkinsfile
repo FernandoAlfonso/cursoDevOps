@@ -3,8 +3,7 @@ pipeline {
 	environment {
 		dockerImageName = "fernandofar/curso:devops"
 		dockerImage1 = ""
-	}
-
+	},
 	agent any { 
 		stages {
 			stage ('Revisar código') {
