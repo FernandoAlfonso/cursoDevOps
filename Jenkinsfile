@@ -32,8 +32,10 @@ pipeline {
 
 				steps {
 					dir ('app') {
-						docker.withRegistry ('https://registry.hub.docker.com', registryCredential) {
-							dockerImage1.push ('v1') // tag
+						script {
+							docker.withRegistry ('https://registry.hub.docker.com', registryCredential) {
+								dockerImage1.push ('v1') // tag
+							}
 						}
 					}
 				}
