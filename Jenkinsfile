@@ -1,8 +1,13 @@
 // Jenkinsfile para comunicar jenkins con git
 pipeline {
 	environment {
-		dockerImageName = "fernandofar/app:v1"
-		dockerImage1 = ""
+		dockerImageNameMySql = "fernandofar/mysql:v1"
+		dockerImageNamePhpMyAdmin = "fernandofar/phpmyadmin:v1"
+		dockerImageNameApp = "fernandofar/app:v1"
+		dockerImageMySql = ""
+		dockerImagePhpMyAdmin = ""
+		dockerImageApp = ""
+		registryCredential = 'poncho_curso_docker_token' // nombre de variable por default
 	}
 	
 	agent any
@@ -15,31 +20,76 @@ pipeline {
 				}
 			}
 
-			stage ('Construir la imagen de la aplicación') {
-				steps {
-					dir ('app') {
-						script {
-							dockerImage1 = docker.build dockerImageName
-						}
-					}
-				}
-			}
-
-			stage ('Subir la imagen App') {
-				environment {
-					registryCredential = 'poncho_curso_docker_token' // nombre de variable por default
-				}
-
-				steps {
-					dir ('app') {
-						script {
-							docker.withRegistry ('https://registry.hub.docker.com', registryCredential) {
-								dockerImage1.push ('v1') // tag
+			// mysql
+				stage ('Construir la imagen de MySql') {
+					steps {
+						dir ('mysql') {
+							script {
+								dockerImageMySql = docker.build dockerImageNameMySql
 							}
 						}
 					}
 				}
-			}
+
+				stage ('Subir la imagen MySql') {
+					steps {
+						dir ('mysql') {
+							script {
+								docker.withRegistry ('https://registry.hub.docker.com', registryCredential) {
+									dockerImageMySql.push ('v1') // tag
+								}
+							}
+						}
+					}
+				}
+
+			// PhpMyAdmin
+				stage ('Construir la imagen de PhpMyAdmin') {
+					steps {
+						dir ('mysql') {
+							script {
+								dockerImageNamePhpMyAdmin = docker.build dockerImageNamePhpMyAdmin
+							}
+						}
+					}
+				}
+
+				stage ('Subir la imagen PhpMyAdmin') {
+					steps {
+						dir ('phpmyadmin') {
+							script {
+								docker.withRegistry ('https://registry.hub.docker.com', registryCredential) {
+									dockerImageNamePhpMyAdmin.push ('v1') // tag
+								}
+							}
+						}
+					}
+				}
+
+			// app
+				stage ('Construir la imagen de la aplicación') {
+					steps {
+						dir ('app') {
+							script {
+								dockerImageApp = docker.build dockerImageNameApp
+							}
+						}
+					}
+				}
+
+				stage ('Subir la imagen App') {
+					steps {
+						dir ('app') {
+							script {
+								docker.withRegistry ('https://registry.hub.docker.com', registryCredential) {
+									dockerImageApp.push ('v1') // tag
+								}
+							}
+						}
+					}
+				}
+
+
 		}
 }
 
