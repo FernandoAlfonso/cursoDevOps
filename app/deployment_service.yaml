@@ -32,6 +32,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: app_kubernetes_poncho
+  namespace: cursokubernetesponcho
   labels:
     app: app_kubernetes_poncho
 spec:

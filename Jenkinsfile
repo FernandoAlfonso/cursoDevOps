@@ -93,7 +93,6 @@ pipeline {
 				stage ('Ejecutar POD') {
 					steps {
 						sshagent (['rodriguezssh']) {
-							sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl apply'
 							sh 'cd app && scp -r -o StrictHostKeyChecking=no deployment_service.yaml digesetuser@148.213.1.131:/home/digesetuser/'
 							script {
 								try {
