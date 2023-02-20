@@ -1,0 +1,47 @@
+apiVersion: app/v1
+kind: Deployment
+metadata:
+  name: app_kubernetes_poncho
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app_kubernetes_poncho
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+        maxSurge: 0
+        maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: app_kubernetes_poncho
+        role: app_kubernetes_poncho
+    spec:
+      containers:
+        - name: app_kubernetes_poncho
+          image: fernandofar/app:v1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+              name: app_kubernetes_poncho
+​
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app_kubernetes_poncho
+  labels:
+    app: app_kubernetes_poncho
+spec:
+  selector:
+   app: app_kubernetes_poncho
+  type: ClusterIP
+  ports:
+   - name: http
+     port: 80
+     protocol: TCP
+     targetPort: 80
+  selector:
+    role: app_kubernetes_poncho
+Contraer
