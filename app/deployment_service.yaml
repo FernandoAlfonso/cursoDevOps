@@ -26,8 +26,7 @@ spec:
           ports:
             - containerPort: 80
               name: app_kubernetes_poncho
-​
----
+
 apiVersion: v1
 kind: Service
 metadata:
