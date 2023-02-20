@@ -2,6 +2,7 @@ apiVersion: app/v1
 kind: Deployment
 metadata:
   name: app_kubernetes_poncho
+  namespace: curso_kubernetes_poncho
 spec:
   replicas: 1
   selector:
