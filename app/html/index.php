@@ -12,6 +12,8 @@ $password = "1234" ;
 // 	die ("Falló la conexión: " . mysqli_connect_error());
 // }
 
+// https://datacenter.ucol.mx/curso_devops_poncho
+
 echo "Conexión existosa" ;
 // mysqli_close ($conn);
 ?>
