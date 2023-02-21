@@ -1,3 +1,4 @@
+# frontend
 apiVersion: app/v1
 kind: Deployment
 metadata:
@@ -27,6 +28,7 @@ spec:
             - containerPort: 80
               name: appkubernetesponcho
 
+# backend
 apiVersion: v1
 kind: Service
 metadata:
