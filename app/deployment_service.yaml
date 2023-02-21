@@ -1,13 +1,13 @@
-apiVersion: app/v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: lol
+  name: lolponcho
   namespace: cursokubernetesponcho
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: lol
+      app: lolponcho
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -16,33 +16,32 @@ spec:
   template:
     metadata:
       labels:
-        app: lol
-        role: lol
+        app: lolponcho
+        role: lolponcho
     spec:
       containers:
-        - name: lol
+        - name: lolponcho
           image: fernandofar/app:v1
           imagePullPolicy: Always
           ports:
             - containerPort: 80
-              name: lol
-
---- # backend
+              name: lolponcho
+---
 apiVersion: v1
 kind: Service
 metadata:
-  name: lol
+  name: lolponcho
   namespace: cursokubernetesponcho
   labels:
-    app: lol
+    app: lolponcho
 spec:
   selector:
-    app: lol
+   app: lolponcho
   type: ClusterIP
   ports:
-    - name: http
-      port: 80
-      protocol: TCP
-      targetPort: 80
+   - name: http
+     port: 80
+     protocol: TCP
+     targetPort: 80
   selector:
-    role: lol
+    role: lolponcho

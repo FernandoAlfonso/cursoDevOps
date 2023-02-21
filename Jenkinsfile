@@ -92,13 +92,18 @@ pipeline {
 			// Ejecutar POD (kubernetes)
 				stage ('Ejecutar POD') {
 					steps {
-						sshagent (['rodriguezssh']) {
+						sshagent (['sshsanchez']) {
 							sh 'cd app && scp -r -o StrictHostKeyChecking=no deployment_service.yaml digesetuser@148.213.1.131:/home/digesetuser/'
 							script {
 								try {
 									sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl apply -f deployment_service.yaml --kubeconfig=/home/digesetuser/.kube/config'
-									sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl rollout restart deployment lol -n cursokubernetesponcho --kubeconfig=/home/digesetuser/.kube/config'
-									sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl rollout status deployment lol -n cursokubernetesponcho --kubeconfig=/home/digesetuser/.kube/config'          
+									sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl rollout restart deployment lolponcho -n cursokubernetesponcho --kubeconfig=/home/digesetuser/.kube/config'
+									sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl rollout status deployment lolponcho -n cursokubernetesponcho --kubeconfig=/home/digesetuser/.kube/config'
+									
+									sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl apply -f deployment_service.yaml --kubeconfig=/home/digesetuser/.kube/config'
+                  sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl rollout restart deployment lolponcho -n cursokubernetesponcho --kubeconfig=/home/digesetuser/.kube/config'
+                  sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl rollout status deployment lolponcho -n cursokubernetesponcho --kubeconfig=/home/digesetuser/.kube/config'
+
 								} catch (error) {
 
 								}
