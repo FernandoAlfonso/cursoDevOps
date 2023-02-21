@@ -2,13 +2,13 @@
 apiVersion: app/v1
 kind: Deployment
 metadata:
-  name: appkubernetesponcho
+  name: app_kubernetes_poncho
   namespace: cursokubernetesponcho
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: appkubernetesponcho
+      app: app_kubernetes_poncho
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -17,28 +17,28 @@ spec:
   template:
     metadata:
       labels:
-        app: appkubernetesponcho
-        role: appkubernetesponcho
+        app: app_kubernetes_poncho
+        role: app_kubernetes_poncho
     spec:
       containers:
-        - name: appkubernetesponcho
+        - name: app_kubernetes_poncho
           image: fernandofar/app:v1
           imagePullPolicy: Always
           ports:
             - containerPort: 80
-              name: appkubernetesponcho
+              name: app_kubernetes_poncho
 
 # backend
 apiVersion: v1
 kind: Service
 metadata:
-  name: appkubernetesponcho
+  name: app_kubernetes_poncho
   namespace: cursokubernetesponcho
   labels:
-    app: appkubernetesponcho
+    app: app_kubernetes_poncho
 spec:
   selector:
-    app: appkubernetesponcho
+    app: app_kubernetes_poncho
   type: ClusterIP
   ports:
     - name: http
@@ -46,4 +46,4 @@ spec:
       protocol: TCP
       targetPort: 80
   selector:
-    role: appkubernetesponcho
+    role: app_kubernetes_poncho
