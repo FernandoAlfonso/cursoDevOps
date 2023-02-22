@@ -14,6 +14,6 @@ $password = "1234" ;
 
 // https://datacenter.ucol.mx/curso_devops_poncho
 
-echo "Conexión existosa" ;
+echo "Conexión existosa =)" ;
 // mysqli_close ($conn);
 ?>
