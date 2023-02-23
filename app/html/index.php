@@ -5,12 +5,12 @@ $username = "root" ;
 $password = "1234" ;
 
 // Crear conexión:
-// $conn = mysqli_connect ($servername, $username, $password,$database);
+$conn = mysqli_connect ($servername, $username, $password,$database);
 
 // verificar conexión:
-// if (!$conn) {
-// 	die ("Falló la conexión: " . mysqli_connect_error());
-// }
+if (!$conn) {
+	die ("Falló la conexión: " . mysqli_connect_error());
+}
 
 // https://datacenter.ucol.mx/curso_devops_poncho
 

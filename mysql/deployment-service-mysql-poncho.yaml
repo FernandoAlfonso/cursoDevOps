@@ -1,0 +1,79 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cursokubernetesponcho
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: secretomysqlponcho
+  namespace: cursokubernetesponcho
+type: Opaque
+data:
+  ROOT_PASSWORD: MTIzNA== # 1234 codificado en base64
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: volumenmysqlponcho
+  namespace: cursokubernetesponcho
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podmysqlponcho # debe de ser único
+  namespace: cursokubernetesponcho
+  labels:
+    app: podmysqlponcho
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: podmysqlponcho
+  template:
+    metadata:
+      labels:
+        app: podmysqlponcho
+    spec:
+      containers:
+        - name: podmysqlponcho
+          image: mysql:5.7
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - mountPath: "/var/lib/mysql"
+              subPath: "mysql"
+              name: volumenmysqlponcho
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secretomysqlponcho
+                  key: ROOT_PASSWORD
+      volumes:
+        - name: volumenmysqlponcho
+          persistentVolumeClaim:
+            claimName: volumenmysqlponcho
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: serviciomysqlponcho #debe de ser único
+  namespace: cursokubernetesponcho
+spec:
+  selector:
+    app: serviciomysqlponcho
+  ports:
+  - protocol: TCP
+    port: 3306
+    targetPort: 3306

@@ -1,10 +1,10 @@
 // Jenkinsfile para comunicar jenkins con git
 pipeline {
 	environment {
-		dockerImageNameMySql = "fernandofar/mysql:v1"
+		// dockerImageNameMySql = "fernandofar/mysql:v1"
 		dockerImageNamePhpMyAdmin = "fernandofar/phpmyadmin:v1"
 		dockerImageNameApp = "fernandofar/app:v1"
-		dockerImageMySql = ""
+		// dockerImageMySql = ""
 		dockerImagePhpMyAdmin = ""
 		dockerImageApp = ""
 		registryCredential = 'poncho_curso_docker_token' // nombre de variable por default
@@ -21,27 +21,27 @@ pipeline {
 			}
 
 			// mysql
-				stage ('Construir la imagen de MySql') {
-					steps {
-						dir ('mysql') {
-							script {
-								dockerImageMySql = docker.build dockerImageNameMySql
-							}
-						}
-					}
-				}
+				// stage ('Construir la imagen de MySql') {
+				// 	steps {
+				// 		dir ('mysql') {
+				// 			script {
+				// 				dockerImageMySql = docker.build dockerImageNameMySql
+				// 			}
+				// 		}
+				// 	}
+				// }
 
-				stage ('Subir la imagen MySql') {
-					steps {
-						dir ('mysql') {
-							script {
-								docker.withRegistry ('https://registry.hub.docker.com', registryCredential) {
-									dockerImageMySql.push ('v1') // tag
-								}
-							}
-						}
-					}
-				}
+				// stage ('Subir la imagen MySql') {
+				// 	steps {
+				// 		dir ('mysql') {
+				// 			script {
+				// 				docker.withRegistry ('https://registry.hub.docker.com', registryCredential) {
+				// 					dockerImageMySql.push ('v1') // tag
+				// 				}
+				// 			}
+				// 		}
+				// 	}
+				// }
 
 			// PhpMyAdmin
 				stage ('Construir la imagen de PhpMyAdmin') {
@@ -93,17 +93,27 @@ pipeline {
 				stage ('Ejecutar POD') {
 					steps {
 						sshagent (['sshsanchez']) {
-							sh 'cd app && scp -r -o StrictHostKeyChecking=no deployment_service.yaml digesetuser@148.213.1.131:/home/digesetuser/'
-							script {
-								try {
-									sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl apply -f deployment_service.yaml --kubeconfig=/home/digesetuser/.kube/config'
-                  sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl rollout restart deployment lolponcho -n cursokubernetesponcho --kubeconfig=/home/digesetuser/.kube/config'
-                  sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl rollout status deployment lolponcho -n cursokubernetesponcho --kubeconfig=/home/digesetuser/.kube/config'
+							// app
+								sh 'cd app && scp -r -o StrictHostKeyChecking=no deployment-service-app-poncho.yaml digesetuser@148.213.1.131:/home/digesetuser/'
+								script {
+									try {
+										sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl apply -f deployment-service-app-poncho.yaml --kubeconfig=/home/digesetuser/.kube/config'
+	                  sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl rollout restart deployment lolponcho -n cursokubernetesponcho --kubeconfig=/home/digesetuser/.kube/config'
+	                  sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl rollout status deployment lolponcho -n cursokubernetesponcho --kubeconfig=/home/digesetuser/.kube/config'
 
-								} catch (error) {
-
+									} catch (error) {}
 								}
-							}
+
+							// mysql
+								sh 'cd app && scp -r -o StrictHostKeyChecking=no deployment-service-mysql-poncho.yaml digesetuser@148.213.1.131:/home/digesetuser/'
+								script {
+									try {
+										sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl apply -f deployment-service-mysql-poncho.yaml --kubeconfig=/home/digesetuser/.kube/config'
+	                  sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl rollout restart deployment podmysqlponcho -n cursokubernetesponcho --kubeconfig=/home/digesetuser/.kube/config'
+	                  sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl rollout status deployment podmysqlponcho -n cursokubernetesponcho --kubeconfig=/home/digesetuser/.kube/config'
+
+									} catch (error) {}
+								}
 						}
 					}
 				}
