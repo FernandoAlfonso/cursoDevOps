@@ -1,5 +1,5 @@
 <?php
-$servername = "148.213.50.148:3306" ;
+$servername = "podmysqlponcho:3306" ;
 $database = "prueba1" ;
 $username = "root" ;
 $password = "1234" ;
