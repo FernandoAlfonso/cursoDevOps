@@ -1,3 +1,10 @@
-FROM phpmyadmin:apache
-ENV PMA_HOST=db
+FROM phpmyadmin/phpmyadmin
+COPY ./000-default.conf  /etc/apache2/sites-available/000-default.conf
+RUN service apache2 restart
 EXPOSE 80
+
+
+
+# FROM phpmyadmin:apache
+# ENV PMA_HOST=db
+# EXPOSE 80

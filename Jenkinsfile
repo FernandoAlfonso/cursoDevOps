@@ -105,12 +105,23 @@ pipeline {
 								}
 
 							// mysql
-								sh 'cd app && scp -r -o StrictHostKeyChecking=no deployment-service-mysql-poncho.yaml digesetuser@148.213.1.131:/home/digesetuser/'
+								sh 'cd mysql && scp -r -o StrictHostKeyChecking=no deployment-service-mysql-poncho.yaml digesetuser@148.213.1.131:/home/digesetuser/'
 								script {
 									try {
 										sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl apply -f deployment-service-mysql-poncho.yaml --kubeconfig=/home/digesetuser/.kube/config'
 	                  sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl rollout restart deployment podmysqlponcho -n cursokubernetesponcho --kubeconfig=/home/digesetuser/.kube/config'
 	                  sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl rollout status deployment podmysqlponcho -n cursokubernetesponcho --kubeconfig=/home/digesetuser/.kube/config'
+
+									} catch (error) {}
+								}
+
+							// phpmyadmin
+								sh 'cd phpmyadmin && scp -r -o StrictHostKeyChecking=no deployment-service-phpmyadmin-poncho.yaml digesetuser@148.213.1.131:/home/digesetuser/'
+								script {
+									try {
+										sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl apply -f deployment-service-phpmyadmin-poncho.yaml --kubeconfig=/home/digesetuser/.kube/config'
+	                  sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl rollout restart deployment podphpmyadminponcho -n cursokubernetesponcho --kubeconfig=/home/digesetuser/.kube/config'
+	                  sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl rollout status deployment podphpmyadminponcho -n cursokubernetesponcho --kubeconfig=/home/digesetuser/.kube/config'
 
 									} catch (error) {}
 								}
