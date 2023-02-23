@@ -46,7 +46,7 @@ pipeline {
 			// PhpMyAdmin
 				stage ('Construir la imagen de PhpMyAdmin') {
 					steps {
-						dir ('mysql') {
+						dir ('phpmyadmin') {
 							script {
 								dockerImageNamePhpMyAdmin = docker.build dockerImageNamePhpMyAdmin
 							}
