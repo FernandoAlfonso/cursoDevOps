@@ -1,79 +1,75 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: cursokubernetesponcho
-
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: secretomysqlponcho
-  namespace: cursokubernetesponcho
-type: Opaque
-data:
-  ROOT_PASSWORD: MTIzNA== # 1234 codificado en base64
-
+  name: cursokubernetesponcho2
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: volumenmysqlponcho
-  namespace: cursokubernetesponcho
+  name: mysql-data-disk-poncho2
+  namespace: cursokubernetesponcho2
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
       storage: 1Gi
-
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: secretomysqlponcho2
+  namespace: cursokubernetesponcho2
+type: Opaque
+data:
+  password: MTIzNA== # 1234 codificado en base64
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: podmysqlponcho # debe de ser único
-  namespace: cursokubernetesponcho
-  labels:
-    app: podmysqlponcho
+  name: podmysqlponcho2
+  namespace: cursokubernetesponcho2
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: podmysqlponcho
+      app: mysql
   template:
     metadata:
       labels:
-        app: podmysqlponcho
+        app: podmysqlponcho2
     spec:
       containers:
-        - name: podmysqlponcho
+        - name: podmysqlponcho2
           image: mysql:5.7
-          ports:
-            - containerPort: 3306
-          volumeMounts:
-            - mountPath: "/var/lib/mysql"
-              subPath: "mysql"
-              name: volumenmysqlponcho
           env:
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: secretomysqlponcho
-                  key: ROOT_PASSWORD
+                  name: secretomysqlponcho2
+                  key: password
+          ports:
+            - containerPort: 3306
+              name: mysql
+          volumeMounts:
+            - name: mysql-data-disk-poncho2
+              mountPath: /var/lib/mysql
       volumes:
-        - name: volumenmysqlponcho
+        - name: mysql-data-disk-poncho2
           persistentVolumeClaim:
-            claimName: volumenmysqlponcho
-
+            claimName: mysql-data-disk-poncho2
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: serviciomysqlponcho #debe de ser único
-  namespace: cursokubernetesponcho
+  name: serviciomysqlponcho2 #debe de ser único
+  namespace: cursokubernetesponcho2
 spec:
   selector:
-    app: serviciomysqlponcho
+    app: serviciomysqlponcho2
+  type: ClusterIP
   ports:
-  - protocol: TCP
-    port: 3306
-    targetPort: 3306
+    - name: mysql
+      port: 3306
+      targetPort: 3306
+

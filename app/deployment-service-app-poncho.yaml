@@ -1,19 +1,19 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: cursokubernetesponcho
+  name: cursokubernetesponcho2
 
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: lolponcho
-  namespace: cursokubernetesponcho
+  name: podappponcho
+  namespace: cursokubernetesponcho2
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: lolponcho
+      app: podappponcho
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -22,27 +22,27 @@ spec:
   template:
     metadata:
       labels:
-        app: lolponcho
-        role: lolponcho
+        app: podappponcho
+        role: podappponcho
     spec:
       containers:
-        - name: lolponcho
+        - name: podappponcho
           image: fernandofar/app:v1
           imagePullPolicy: Always
           ports:
             - containerPort: 80
-              name: lolponcho
+              name: podappponcho
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: lolponcho
-  namespace: cursokubernetesponcho
+  name: podappponcho
+  namespace: cursokubernetesponcho2
   labels:
-    app: lolponcho
+    app: podappponcho
 spec:
   selector:
-   app: lolponcho
+   app: podappponcho
   type: ClusterIP
   ports:
    - name: http
@@ -50,4 +50,4 @@ spec:
      protocol: TCP
      targetPort: 80
   selector:
-    role: lolponcho
+    role: podappponcho

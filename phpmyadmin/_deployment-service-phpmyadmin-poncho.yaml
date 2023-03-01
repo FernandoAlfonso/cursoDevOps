@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cursokubernetesponcho
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: secretomysqlponcho
+  namespace: cursokubernetesponcho
+type: Opaque
+data:
+  ROOT_PASSWORD: MTIzNA== # 1234 codificado en base64
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podphpmyadminponcho # debe de ser único
+  namespace: cursokubernetesponcho
+  labels:
+    app: podphpmyadminponcho
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: podphpmyadminponcho
+  template:
+    metadata:
+      labels:
+        app: podphpmyadminponcho
+    spec:
+      containers:
+        - name: podphpmyadminponcho
+          image: fernandofar/phpmyadmin:v1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          env:
+            - name: PMA_HOST
+              value: serviciomysqlponcho
+            - name: PMA_PORT
+              value: "3306"
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secretomysqlponcho
+                  key: ROOT_PASSWORD
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: serviciophpmyadminponcho
+  namespace: cursokubernetesponcho
+spec:
+  type: ClusterIP
+  selector:
+    app: podphpmyadminponcho
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
