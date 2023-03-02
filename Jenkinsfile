@@ -3,7 +3,7 @@ pipeline {
 	environment {
 		dockerImageNameApp = "fernandofar/app:v1"
 		dockerImageApp = ""
-		dockerImageNamePhpMyAdmin = "fernandofar/phpmyadmin:v1"
+		dockerImageNamePhpMyAdmin = "udecdj2022/phpmyadmin"
 		dockerImagePhpMyAdmin = ""
 		registryCredential = 'poncho_curso_docker_token' // nombre de variable por default
 	}
