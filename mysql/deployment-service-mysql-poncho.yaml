@@ -6,7 +6,7 @@ metadata:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: mysql-data-disk-poncho2
+  name: mysql-data-disk
   namespace: cursokubernetesponcho2
 spec:
   accessModes:
@@ -18,58 +18,57 @@ spec:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: secretomysqlponcho2
+  name: mysql-secrets
   namespace: cursokubernetesponcho2
 type: Opaque
 data:
-  password: MTIzNA== # 1234 codificado en base64
+  password: c3VwZXI=
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: podmysqlponcho2
+  name: mysql-deployment
   namespace: cursokubernetesponcho2
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: mysqlponcho2app
+      app: mysql
   template:
     metadata:
       labels:
-        app: mysqlponcho2app
+        app: mysql
     spec:
       containers:
-        - name: mysqlponcho2app
+        - name: mysql
           image: mysql:latest
           env:
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: secretomysqlponcho2
+                  name: mysql-secrets
                   key: password
           ports:
             - containerPort: 3306
-              name: mysqlponcho2app
+              name: mysql
           volumeMounts:
             - name: mysql-data
               mountPath: /var/lib/mysql
       volumes:
         - name: mysql-data
           persistentVolumeClaim:
-            claimName: mysql-data-disk-poncho2
+            claimName: mysql-data-disk
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: serviciomysqlponcho2 #debe de ser único
+  name: mysql-service
   namespace: cursokubernetesponcho2
 spec:
   selector:
-    app: mysqlponcho2app
+    app: mysql
   type: ClusterIP
   ports:
-    - name: serviciomysqlponcho2
+    - name: mysql
       port: 3306
       targetPort: 3306
-
