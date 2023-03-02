@@ -66,7 +66,7 @@ pipeline {
 
 			
 			// Ejecutar PODs (kubernetes) 
-				stage ('Ejecutar POD') {
+				stage ('Ejecutar POD App') {
 					steps {
 						sshagent (['sshsanchez']) {
 							// app
@@ -79,7 +79,13 @@ pipeline {
 
 									} catch (error) {}
 								}
+						}
+					}
+				}
 
+				stage ('Ejecutar POD MySQL') {
+					steps {
+						sshagent (['sshsanchez']) {
 							// mysql
 								sh 'cd mysql && scp -r -o StrictHostKeyChecking=no deployment-service-mysql-poncho.yaml digesetuser@148.213.1.131:/home/digesetuser/'
 								script {
@@ -90,7 +96,13 @@ pipeline {
 
 									} catch (error) {}
 								}
+						}
+					}
+				}
 
+				stage ('Ejecutar POD PhpMyAdmin') {
+					steps {
+						sshagent (['sshsanchez']) {
 							// phpmyadmin
 								sh 'cd phpmyadmin && scp -r -o StrictHostKeyChecking=no deployment-service-phpmyadmin-poncho.yaml digesetuser@148.213.1.131:/home/digesetuser/'
 								script {

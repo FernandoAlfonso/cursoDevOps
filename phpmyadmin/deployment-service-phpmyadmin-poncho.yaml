@@ -6,30 +6,30 @@ metadata:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: podphpmyadminponcho2
+  name: phpmyadmin-deployment
   namespace: cursokubernetesponcho2
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: podphpmyadminponcho2
+      app: phpmyadmin
   template:
     metadata:
       labels:
-        app: podphpmyadminponcho2
+        app: phpmyadmin
     spec:
       containers:
-        - name: podphpmyadminponcho2
-          image: fernandofar/phpmyadmin:v1
+        - name: phpmyadmin
+          image: udecdj2022/phpmyadmin:vpipeline
           ports:
             - containerPort: 80
           env:
             - name: PMA_HOST
-              value: serviciomysqlponcho2
+              value: mysql-service
             - name: PMA_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: secretomysqlponcho2
+                  name: mysql-secrets
                   key: password
           volumeMounts:
             - name: sessions
@@ -41,14 +41,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: serviciophpmyadminponcho2
+  name: phpmyadmin-service
   namespace: cursokubernetesponcho2
 spec:
   type: ClusterIP
   selector:
-    app: serviciophpmyadminponcho2
+    app: phpmyadmin
   ports:
   - protocol: TCP
     port: 80
     targetPort: 80
-
