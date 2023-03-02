@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: phpmyadmin
-          image: udecdj2022/phpmyadmin:vpipeline
+          image: fernandofar/phpmyadmin:v1
           ports:
             - containerPort: 80
           env:
