@@ -33,14 +33,14 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: podmysqlponcho2app
+      app: mysqlponcho2app
   template:
     metadata:
       labels:
-        app: podmysqlponcho2app
+        app: mysqlponcho2app
     spec:
       containers:
-        - name: podmysqlponcho2app
+        - name: mysqlponcho2app
           image: mysql:latest
           env:
             - name: MYSQL_ROOT_PASSWORD
@@ -50,7 +50,7 @@ spec:
                   key: password
           ports:
             - containerPort: 3306
-              name: podmysqlponcho2app
+              name: mysqlponcho2app
           volumeMounts:
             - name: mysql-data
               mountPath: /var/lib/mysql
@@ -66,7 +66,7 @@ metadata:
   namespace: cursokubernetesponcho2
 spec:
   selector:
-    app: podmysqlponcho2app
+    app: mysqlponcho2app
   type: ClusterIP
   ports:
     - name: serviciomysqlponcho2
