@@ -1,12 +1,10 @@
 // Jenkinsfile para comunicar jenkins con git
 pipeline {
 	environment {
-		// dockerImageNameMySql = "fernandofar/mysql:v1"
-		dockerImageNamePhpMyAdmin = "fernandofar/phpmyadmin:v1"
 		dockerImageNameApp = "fernandofar/app:v1"
-		// dockerImageMySql = ""
-		dockerImagePhpMyAdmin = ""
 		dockerImageApp = ""
+		dockerImageNamePhpMyAdmin = "fernandofar/phpmyadmin:v1"
+		dockerImagePhpMyAdmin = ""
 		registryCredential = 'poncho_curso_docker_token' // nombre de variable por default
 	}
 	
@@ -19,52 +17,6 @@ pipeline {
 					branch: 'main'
 				}
 			}
-
-			// mysql
-				// stage ('Construir la imagen de MySql') {
-				// 	steps {
-				// 		dir ('mysql') {
-				// 			script {
-				// 				dockerImageMySql = docker.build dockerImageNameMySql
-				// 			}
-				// 		}
-				// 	}
-				// }
-
-				// stage ('Subir la imagen MySql') {
-				// 	steps {
-				// 		dir ('mysql') {
-				// 			script {
-				// 				docker.withRegistry ('https://registry.hub.docker.com', registryCredential) {
-				// 					dockerImageMySql.push ('v1') // tag
-				// 				}
-				// 			}
-				// 		}
-				// 	}
-				// }
-
-			// PhpMyAdmin
-				stage ('Construir la imagen de PhpMyAdmin') {
-					steps {
-						dir ('phpmyadmin') {
-							script {
-								dockerImageNamePhpMyAdmin = docker.build dockerImageNamePhpMyAdmin
-							}
-						}
-					}
-				}
-
-				stage ('Subir la imagen PhpMyAdmin') {
-					steps {
-						dir ('phpmyadmin') {
-							script {
-								docker.withRegistry ('https://registry.hub.docker.com', registryCredential) {
-									dockerImageNamePhpMyAdmin.push ('v1') // tag
-								}
-							}
-						}
-					}
-				}
 
 			// app
 				stage ('Construir la imagen de la aplicación') {
@@ -89,7 +41,31 @@ pipeline {
 					}
 				}
 
-			// Ejecutar POD (kubernetes)
+			// PhpMyAdmin
+				stage ('Construir la imagen de PhpMyAdmin') {
+					steps {
+						dir ('phpmyadmin') {
+							script {
+								dockerImageNamePhpMyAdmin = docker.build dockerImageNamePhpMyAdmin
+							}
+						}
+					}
+				}
+
+				stage ('Subir la imagen PhpMyAdmin') {
+					steps {
+						dir ('phpmyadmin') {
+							script {
+								docker.withRegistry ('https://registry.hub.docker.com', registryCredential) {
+									dockerImageNamePhpMyAdmin.push ('v1') // tag
+								}
+							}
+						}
+					}
+				}
+
+			
+			// Ejecutar PODs (kubernetes) 
 				stage ('Ejecutar POD') {
 					steps {
 						sshagent (['sshsanchez']) {
@@ -99,7 +75,7 @@ pipeline {
 									try {
 										sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl apply -f deployment-service-app-poncho.yaml --kubeconfig=/home/digesetuser/.kube/config'
 	                  sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl rollout restart deployment podappponcho -n cursokubernetesponcho2 --kubeconfig=/home/digesetuser/.kube/config'
-	                  // sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl rollout status deployment podappponcho -n cursokubernetesponcho2 --kubeconfig=/home/digesetuser/.kube/config'
+	                  sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl rollout status deployment podappponcho -n cursokubernetesponcho2 --kubeconfig=/home/digesetuser/.kube/config'
 
 									} catch (error) {}
 								}
@@ -110,7 +86,7 @@ pipeline {
 									try {
 										sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl apply -f deployment-service-mysql-poncho.yaml --kubeconfig=/home/digesetuser/.kube/config'
 	                  sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl rollout restart deployment podmysqlponcho2 -n cursokubernetesponcho2 --kubeconfig=/home/digesetuser/.kube/config'
-	                  // sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl rollout status deployment podmysqlponcho2 -n cursokubernetesponcho2 --kubeconfig=/home/digesetuser/.kube/config'
+	                  sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl rollout status deployment podmysqlponcho2 -n cursokubernetesponcho2 --kubeconfig=/home/digesetuser/.kube/config'
 
 									} catch (error) {}
 								}
@@ -121,7 +97,7 @@ pipeline {
 									try {
 										sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl apply -f deployment-service-phpmyadmin-poncho.yaml --kubeconfig=/home/digesetuser/.kube/config'
 	                  sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl rollout restart deployment podphpmyadminponcho2 -n cursokubernetesponcho2 --kubeconfig=/home/digesetuser/.kube/config'
-	                  // sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl rollout status deployment podphpmyadminponcho2 -n cursokubernetesponcho2 --kubeconfig=/home/digesetuser/.kube/config'
+	                  sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl rollout status deployment podphpmyadminponcho2 -n cursokubernetesponcho2 --kubeconfig=/home/digesetuser/.kube/config'
 
 									} catch (error) {}
 								}
@@ -129,5 +105,18 @@ pipeline {
 					}
 				}
 		}
+
+		post {
+			success {
+				slackSend channel: 'prueba_pipeline_poncho', color: 'good', failOnError: true, message: "${custom_msg()}", teamDomain: 'universidadde-bea3869', tokenCredentialId: 'slackpass' }
+			}
+		}
 }
 
+def custom_msg() {
+  def JENKINS_URL= "jarvis.ucol.mx:8080"
+  def JOB_NAME = env.JOB_NAME
+  def BUILD_ID= env.BUILD_ID
+  def JENKINS_LOG= " DEPLOY LOG: Job [${env.JOB_NAME}] Logs path: ${JENKINS_URL}/job/${JOB_NAME}/${BUILD_ID}/consoleText"
+  return JENKINS_LOG
+}
