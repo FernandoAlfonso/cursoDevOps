@@ -33,7 +33,7 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: mysql
+      app: podmysqlponcho2
   template:
     metadata:
       labels:
@@ -50,7 +50,7 @@ spec:
                   key: password
           ports:
             - containerPort: 3306
-              name: mysql
+              name: podmysqlponcho2
           volumeMounts:
             - name: mysql-data-disk-poncho2
               mountPath: /var/lib/mysql
@@ -69,7 +69,7 @@ spec:
     app: serviciomysqlponcho2
   type: ClusterIP
   ports:
-    - name: mysql
+    - name: podmysqlponcho2
       port: 3306
       targetPort: 3306
 
