@@ -96,8 +96,8 @@ pipeline {
 								script {
 									try {
 										sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl apply -f deployment-service-phpmyadmin-poncho.yaml --kubeconfig=/home/digesetuser/.kube/config'
-	                  sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl rollout restart deployment podphpmyadminponcho2 -n cursokubernetesponcho2 --kubeconfig=/home/digesetuser/.kube/config'
-	                  // sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl rollout status deployment podphpmyadminponcho2 -n cursokubernetesponcho2 --kubeconfig=/home/digesetuser/.kube/config'
+	                  sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl rollout restart deployment mysql-deployment -n cursokubernetesponcho2 --kubeconfig=/home/digesetuser/.kube/config'
+	                  // sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl rollout status deployment mysql-deployment -n cursokubernetesponcho2 --kubeconfig=/home/digesetuser/.kube/config'
 
 									} catch (error) {}
 								}
