@@ -108,7 +108,7 @@ pipeline {
 
 		post {
 			success {
-				slackSend channel: 'prueba_pipeline_poncho', color: 'good', failOnError: true, message: "${custom_msg()}", teamDomain: 'universidadde-bea3869', tokenCredentialId: 'slackpass' }
+				slackSend channel: 'prueba_pipeline_poncho', color: 'good', failOnError: true, message: "${custom_msg()}", teamDomain: 'universidadde-bea3869', tokenCredentialId: 'slackpass'
 			}
 		}
 }
