@@ -75,7 +75,7 @@ pipeline {
 									try {
 										sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl apply -f deployment-service-app-poncho.yaml --kubeconfig=/home/digesetuser/.kube/config'
 	                  sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl rollout restart deployment podappponcho -n cursokubernetesponcho2 --kubeconfig=/home/digesetuser/.kube/config'
-	                  sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl rollout status deployment podappponcho -n cursokubernetesponcho2 --kubeconfig=/home/digesetuser/.kube/config'
+	                  // sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl rollout status deployment podappponcho -n cursokubernetesponcho2 --kubeconfig=/home/digesetuser/.kube/config'
 
 									} catch (error) {}
 								}
@@ -86,7 +86,7 @@ pipeline {
 									try {
 										sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl apply -f deployment-service-mysql-poncho.yaml --kubeconfig=/home/digesetuser/.kube/config'
 	                  sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl rollout restart deployment podmysqlponcho2 -n cursokubernetesponcho2 --kubeconfig=/home/digesetuser/.kube/config'
-	                  sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl rollout status deployment podmysqlponcho2 -n cursokubernetesponcho2 --kubeconfig=/home/digesetuser/.kube/config'
+	                  // sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl rollout status deployment podmysqlponcho2 -n cursokubernetesponcho2 --kubeconfig=/home/digesetuser/.kube/config'
 
 									} catch (error) {}
 								}
@@ -97,7 +97,7 @@ pipeline {
 									try {
 										sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl apply -f deployment-service-phpmyadmin-poncho.yaml --kubeconfig=/home/digesetuser/.kube/config'
 	                  sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl rollout restart deployment podphpmyadminponcho2 -n cursokubernetesponcho2 --kubeconfig=/home/digesetuser/.kube/config'
-	                  sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl rollout status deployment podphpmyadminponcho2 -n cursokubernetesponcho2 --kubeconfig=/home/digesetuser/.kube/config'
+	                  // sh 'ssh digesetuser@148.213.1.131 microk8s.kubectl rollout status deployment podphpmyadminponcho2 -n cursokubernetesponcho2 --kubeconfig=/home/digesetuser/.kube/config'
 
 									} catch (error) {}
 								}
